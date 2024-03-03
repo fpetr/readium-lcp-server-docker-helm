@@ -81,7 +81,7 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
-          build-args: COMPONENT="lcpserver"
+          build-args: COMPONENT=lcpserver
 
       # Build and push Docker image for lsdserver
       # Assuming you have another Dockerfile for lsdserver
