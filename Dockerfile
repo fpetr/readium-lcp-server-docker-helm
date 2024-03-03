@@ -1,8 +1,7 @@
 FROM golang:alpine as build
 ARG COMPONENT
-WORKDIR /${COMPONENT}
-COPY . /${COMPONENT}/.
-WORKDIR /${COMPONENT}
+COPY . /readium/.
+WORKDIR /readium
 RUN go mod download && go mod verify && go build -o $GOPATH/bin ./${COMPONENT}
 
 FROM alpine:latest
