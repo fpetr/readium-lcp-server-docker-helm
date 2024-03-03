@@ -78,7 +78,7 @@ jobs:
           context: .
           push: ${{ github.event_name != 'pull_request' }}
           # tags: ${{ steps.meta-lcpserver.outputs.tags }}
-          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/lcpserver:v0.0.4
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/lcpserver:1.9.0
           labels: ${{ steps.meta-lcpserver.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
