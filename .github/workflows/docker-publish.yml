@@ -6,8 +6,8 @@ name: Docker
 # documentation.
 
 on:
-  schedule:
-    - cron: '29 8 * * *'
+  # schedule:
+  #   - cron: '29 8 * * *'
   push:
     branches: [ "feature/helm" ]
     # Publish semver tags as releases.
@@ -63,11 +63,17 @@ jobs:
 
       # Extract metadata (tags, labels) for Docker
       # https://github.com/docker/metadata-action
-      - name: Extract Docker metadata
+      - name: Extract Docker metadata for lcpserver
         id: meta-lcpserver
         uses: docker/metadata-action@96383f45573cb7f253c731d3b3ab81c87ef81934 # v5.0.0
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/lcpserver
+
+      - name: Extract Docker metadata for lsdserver
+        id: meta-lsdserver
+        uses: docker/metadata-action@96383f45573cb7f253c731d3b3ab81c87ef81934 # v5.0.0
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/lsdserver
 
       # Build and push Docker image with Buildx (don't push on PR)
       # https://github.com/docker/build-push-action
@@ -83,6 +89,19 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
           build-args: COMPONENT=lcpserver
+
+      - name: Build and push Docker image for Status Server
+        id: build-and-push-lsdserver
+        uses: docker/build-push-action@0565240e2d4ab88bba5387d719585280857ece09 # v5.0.0
+        with:
+          context: .
+          push: ${{ github.event_name != 'pull_request' }}
+          # tags: ${{ steps.meta-lcpserver.outputs.tags }}
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}/lsdserver:1.9.0
+          labels: ${{ steps.meta-lsdserver.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          build-args: COMPONENT=lsdserver
 
       # - name: Build and push Docker image for lsdserver
       #   id: build-and-push-lsdserver
